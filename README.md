@@ -1,3 +1,134 @@
+# 202030111 박래현
+
+# 24-10-30 강의내용 정리
+
+### 4.2 데이터 불러오기
+- Next는 클라이언트와 서버 모두에서 데이터를 불러올 수 있음
+- 서버는 다음 두가지의 상황에서 데이터를 불러올 수 있음
+1) 정적 페이지를 만들 때 getStaticProps 함수를 사용해, 빌드 시점에 데이터를 불러올 수 있음
+2) 서버가 페이지를 렌더링할 때 getServerSideProps를 통해, 실행 도중 데이터를 불러올 수도 있음.
+- 데이터베이스에서 데이터를 가져올 수 도 있지만 안전하지 않기 때문에 권장하지 않음 데이터베이스 접근은 백엔드에서 처리하는게 좋음
+- Next는 프런트엔드만 담당하는 것이 좋음.
+
+### 서버가 데이터 불러오기
+- 서버에서는 두 가지 방법으로 HTTP 요청을 만들고 처리할 수 있음
+1) Node의 내장 HTTP 라이브러리를 사용할 수 있음. 다만 서드파티 HTTP클라이언트와 비교했을 때 설정하고 처리해야 할 작업이 더 많은 편입니다.
+2) HTTP 클라이언트 라이브러리를 사용할 수 있음 ex- Axios
+
+## Next.js REST API 사용
+
+### 1. REST API란
+### 2. Json Server
+### 3. axios
+
+#### 1. REST API - 개요
+
+- REST(Representational State Transfer)란 자원을 이름으로 구분하여 그 자원의 상태를 통신을 통해 주고 받는 것
+
+1) HTTP URI(Uniform Resource Identifier : 통일된 자원 식별자)를 이용해서 자원(Resource)을 명시함.
+2) HTTP Method(POST, GET, PUT, DELETE, PATCH 등)를 통해 자원에 CRUD를 적용.
+
+- CRUD란 데이터 처리의 기본적인 기능을 나타냄.
+
+1. Create : 데이터 생성(POST)
+2. Read : 데이터 조회(GET)
+3. Update : 데이터 수정(PUT, PATCH)
+4. Delete : 데이터 삭제(DELETE)
+
+- REST API란 REST의 규칙을 적용한 API를 의미
+
+#### REST API 설계 구칙
+
+- URI는 동사보다는 명사를, 대문자보다는 소문자를 사용하여야 함. <br>
+Example : https://develop.com/run
+- 주소의 마지막에 슬래시 포함 x <br>
+Example : https://develop.com/test
+- 단어를 연결할 때는 하이픈(-) 사용 <br>
+Example : https://develop.com/test-blog
+- 파일 확장자는 URI에 포함 x <br>
+Example : https://develop.com/photo
+- URI에 메소드 포함 x <br>
+Example : http://develop.com/post/1
+
+#### Json Server
+
+- BackEnd가 개발되기 전이나, 아직 외부 API가 결정되지 않았다면 local에 Json server를 구축하고 Frontend 개발을 하기에 적합한 node 패키지.
+- 다음 명령으로 json-server를 설치
+```js
+$ npm i -g json-server
+
+added 45 packages in 3s
+
+14 packages are looking for funding
+  run `npm fund` for details
+```
+- 설치가 잘 되었는지 버전 확인
+```js
+$ json-server --version
+1.0.0-beta.3
+```
+
+#### 3. Axios 설치
+```js
+$ npm i axios
+
+added 9 packages, and audited 322 packages in 2s
+
+130 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+```
+
+#### Axios 사용하기
+
+- Axios Ex
+```js
+const res = await axios.get("https://api.example.com");
+const products = res.data; // Axios에서 응답 본문의 데이터를 가져옴
+```
+- axios를 사용하여 객체를 생성하고는 다시 데이터를 저장함. 왜?
+
+- Fetch API의 예시이다. 비교해보자
+```js
+fetch('https://api.exmapl.com')
+.then(res => res.jso()) //then에서는 json()으로 데이터 추출
+.then(data => {
+    console.log(data); // 여기에 실제 응답 데이터가 있음
+});
+```
+- axios에서 res객체는 통신에 필요한 데이터까지도 포함.
+- 따라서 res.data를 이용해서 json데이터만 추출하는 것
+
+#### Axios 사용하기
+
+- axios.get()을 통해 받아온 응답 객체인 res는 단순히 JSON 데이터만 담고있는게 아니라, HTTP 통신 관련된 여러 정보들을 함께 포함하고 있음.<br>
+예를 들어
+- res.status : HTTP 응답 상태 코드(200,404,500 등)
+- res.headers : 서버로부터 받은 헤더 정보
+- res.config : 요청에 대한 설정 정보
+- res.statusText : 응답 상태에 대한 설명 (예 : "OK")
+- res.data : 서버가 실제로 전송한 데이터
+- res는 실제로 서버가 전송한 데이터이다.
+
+#### Axios 사용하기
+
+- 작성한 data.json으로부터 정보를 받아와보자
+
+#### Axios 사용하기
+
+- 그런데 위와 코드는 비동기 데이터 로딩과 상태 관리가 제대로 고려되지 않았기 떄문에 몇 가지 문제가 있을 수 있음.
+- 특히 Next.js와 같은 링낵트 기반 앱에서 비동기 데이터를 처리할 때 렌더링 주기에 맞게 상태를 관리해야함.
+
+#### [개선할 부분]
+
+1. useState와 useEffect 사용.
+- 비동기 데이터를 가져오는 작업은 컴포넌트의 상태(state)로 관리하는 것이 일반적임. 현재 코드에서는 users 데이터가 비동기적으로 로드되는데, 이를 관리하기 위한 useState와 useEffect 훅이 빠져있음.
+- 데이터를 로드하기 전에 컴포넌트가 렌더링되기 떄문에, users 변수가 초기에는 존재하지 않아 undefined 에러가 발생할 가능성이 있음
+
+2. Loading 상태 처리
+- 데이터를 불러오는 동안 사용자가 기다릴 수 있도록 로딩 상태를 추가하는 것이 좋음.
+
 # 24-09-04 2주차 강의
 
 #### 프로젝트 생성 방법
