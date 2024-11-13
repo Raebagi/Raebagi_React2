@@ -1,5 +1,119 @@
 # 202030111 박래현
 
+# 24-11-13 강의내용 정리
+
+## 07. UI 프레임워크
+
+#### 07-1 UI 라이브러리
+
+- UI 라이브러리, 프레임워크, 유틸리티 기능이 필수는 아닙니다
+- 다만 생산성 향상 및 UI의 일관성을 유지하는데 많은 도움을 받을 수 있습니다
+- 이번 장에서는 다음 3가지의 프레임워크에 관해 간단히 알아 봅니다
+
+#### 07-2 Chakra UI
+
+- 오픈소스 컴포넌트 라이브러리로, 모듈화 되어 있고 접근성이 뛰어나며 보기 좋은 UI를 만들 수 있다
+- 버튼, 모달, 입력 등 다양한 내장 컴포넌트를 제공한다
+- dark mode 및 light mode를 모두 지원합니다
+- Chakra UI의 useColorMode 훅을 사용해서 현재 사용하는 컬러 모드를 확인할 수 있습니다
+
+#### 07-3 Tailwind CSS
+- 다른 프레임워크와는 다르게 CSS 규칙만을 제공.
+- 자바스크립트 모듈이나 리액트 컴포넌트를 제공하지 않기 때문에 필요한 경우 직접 만들어서 사용
+- 변수값을 조정하여 개성있는 디자인을 만들 수 있음. 디자인의 자유도 ^
+- dark mode 및 light mode를 쉽게 적용할 수 있음
+- 빌드 시점에 사용하지 않는 클래스는 제거되기 떄문에 높은 수준의 최적화를 지원
+- CSS 클래스의 접두사를 활용해서 모바일,데스크톱,테블릿 화면에서 원하는 규칙을 지정할 수 있음
+
+#### 07-4 Headless UI 
+
+- Tailwind CSS를 만든 Tailwind Labs 팀의 무료 오픈소스 프로젝트임.
+- Tailwind CSS는 웹 컴포넌트 안에서 사용할 수 있는 CSS클래스만 제공.
+- 따라서 모달이나 버튼 등 동적인 컴포넌트를 만들려면 직접 자바스크립트 코드를 작성해야 함.
+- 이런 단점을 보안하기 위해 HEadless UI가 탄생
+- Headless UI는 CSS클래스를 제공하는 것이 아니라 동적 컴포넌트만 제공
+
+## Next.js의 UI Framework
+
+#### 1. Project 생성
+- Tailwind 사용을 위해 프로젝트를 다시 생성
+- 프로젝트를 다시 생성하지 않고 설정할 수 있지만 과정이 다소 복잡
+- 프로젝트는 Next.js 14로
+- 15.02 버전이 릴리즈 되어 있으나 아직 Tailwind와의 호환성이 안정적이지 않음
+```js
+$ npx create-next-app@14
+```
+- 프로젝트 이름은 자유로 하고 나머지는 모두 yes로 함
+
+#### 2. Tailwind CSS
+- Tailwind는 React를 기준으로 하고 있어서 바로 코드를 사용하면 오류가 발생할 수 있음
+
+#### 3. Headless UI 
+- 구글에서 headless ui를 검색하고 사이트에 접속
+- Home 화면에서 GitHub 아이콘을 클릭하면 일반 사항을 확인할 수 있음
+- App/headless/page.js 파일을 생성
+- Dropdown Menu를 테스트
+- Button을 테스트하고 tailwind class를 수정
+
+#### 4. Chakra UI
+- 구글에서 Chakra UI를 검색하고 사이트에 접속.
+- Home 화면에서 Start Building 버튼을 클릭하고 Next.js를 선택
+- App/chakra/page.js 파일을 생성
+- 지시대로 설치
+- Snippets를 설치하면 src/components/ui 아래 추가 component가 설치됨.
+- Layout에 provider를 설정
+- tsconfig 설정을 확인. 전부 설정되어 있으나 없는 것이 있으면 추가해줌.
+- next.config.mjs를 수정
+-Component메뉴에서 Accordion을 테스트
+
+
+#### 5. React-icon
+
+
+# 24-11-06 강의내용 정리
+
+### 6.1 Styled JSX
+- Styled JSX는 CSS-in-JS 라이브러리임. 내장 모듈이기 때문에 설치가 필요 x
+- 즉 , CSS 속성 지원을 위해 자바스크립트를 사용할 수 있는 라이브러리.
+
+```jsx
+export default function Button(props){
+  return(
+    <>
+    <button className = "button">{props.children}</button>
+    <style jsx>{`
+    .button {
+      padding: 1em;
+      border-radius : 1em;
+      border: none;
+      background : green;
+      color : white;
+    }
+    `}</style>
+    </>
+  )
+} 
+```
+
+#### CSS-in-JS의 단점
+- IDE나 코드 편집기 등 개발 도구에 대한 지원이 부족
+- 문법 하이라이팅, 자동 완성, 린트기능을 제공하지 않음
+- 코드 내에서 css에 대한 의존성이 점점 커지기 때문에 앱 번들도 커지고 느려짐
+- 서버에 미리 CSS를 생성해도 클라이언트에서 리액트 하이드레이션이 끝나면 CSS를 다시 생성해야함.
+- 이 떄문에 실행 시점에 부하가 커지며, 웹 앱이 계속 느려지게 됨. 기능을 추가 할 수록 이런 현상은 심해짐.
+
+### 6.2 CSS Module
+
+- CSS-in-JS의 단점을 회피하기 위한 좋은 방법은 바로 CSS Module임.
+```js
+export default  function Home(){
+  return(
+    <>
+    <h1 className = {foo.main}Home Page/>
+  )
+}
+```
+- 셀렉터 컴포지션은 통상적으로 사용할 수 있는 css를 만들고 compose 속성을 지정해서 일부 속성을 덮어쓰는 기능임.
 # 24-10-30 강의내용 정리
 
 ### 4.2 데이터 불러오기
