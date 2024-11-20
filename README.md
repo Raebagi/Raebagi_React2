@@ -1,5 +1,43 @@
 # 202030111 박래현
 
+# 24-11-20 강의내용 정리
+
+### Props 흐름의 이해
+- next.js의 데이터 흐름은 단방향으로 이루어짐.
+- 즉, parents에서 child component의 방향으로 props의 흐름이 이루어짐.
+- 따라서 계층 구조가 복잡해 지면 props Driling 문제가 발생함
+- Props Driling은 여러개의 component를 지나 props가 전달되면서 발생하는 문제임
+
+- Props Driling은 다음과 같은 문제를 발생시킬 수 있음
+1. 중간에 위치한 component에 불필요한 props를 전달해야 하는 문제
+2. 타겟 component까지 props가 전달되지 않을 경우 원인 규명이 어려움
+3. 필요 이상으로 코드가 복잡해짐
+- 이런 문제를 해결하려면 props를 전역으로 사용하면 됨
+- Next.js에서 props를 전역으로 사용하기 위해서 Context API, Redux 등을 사용함
+
+### 2. Context API - use client
+- 앞에서 작성한 코드 상단에 'use client' 지시문이 있음.
+- Next.js에서 'use client'를 사용하는 이유는 서버 컴포넌트와 클라이언트 컴포넌트를 구분하기 위함임.
+- Next.js는 기본적으로 서버에서 렌더링하도록 설계되어, 클라이언트에서만 필요한 컴포넌트를 명시적으로 지정해야 할 필요가 있음.
+- use client를 컴포넌트 상단에 선언하면 해당 컴포넌트는 클라이언트에서만 렌더링되며, 주로 상태 관리나 브라우저 전용 API 사용이 필요한 경우에 사용됨
+
+### Redux 주요 File의 역할
+#### [Redux Slice]
+- Slice는 Redux Toolkit에서 사용되는 용어로, 특정 기능과 관련된 상태와 reducer 함수의 모음을 나타냄.
+- Slice라는 이름은 애플리케이션 상태의 한 부분을 의미
+- Redux Toolkit의 createSlice 함수를 사용하면 특정 기능과 관련된 상태, 액션, reducer를 한 곳에서 정의할 수 있어 관리가 용이함.
+
+### Context API vs Redux
+#### [Redux]
+- Redux는 전역 상태를 관리하기 위한 독릭접 state관리 라이브러리임
+- 상태의 변경을 예측 가능하게 하고, 전역 state 관리를 더 구조적으로 지원
+- store,reucer,action 등의 개념을 사용해 state와 state dispatch를 관리
+
+#### (장점)
+- 명확한 상태 관리 구조 : 액션과 reducer를 통해 state dispatch 과정을 예측가능하게 만들고 코드의 가독성을 높임
+- 미들웨어 지원 : redux-thunk, redux-sage와 같은 미들웨어를 사용해 비동기 로직을 쉽게 처리 가능
+- 디버깅 도구 : Redux DevTools를 통해 상태 변화 및 디버깅이 용이함
+- 모든 프레임워크와의 호환 : React뿐만 아니라 다른 JavaScript 프레임워크와도 함께 사용할 수 있음.
 # 24-11-13 강의내용 정리
 
 ## 07. UI 프레임워크
